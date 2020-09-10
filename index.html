@@ -1,0 +1,111 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <style>
+            #definition {
+                height: 200px;
+                z-index: -1;
+                color: white;
+                background-color: black;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                position: fixed;
+                text-align: center;
+                opacity: 0;
+            }
+            .content {
+                width: 80%;
+                margin: auto;
+            }
+            .fadeInAndOut {
+                -webkit-animation: fadeinout 5s ease-out forwards;
+                animation: fadeinout 5s ease-out forwards;
+            }
+            @-webkit-keyframes fadeinout { 50% { opacity: 1; } }
+            @keyframes fadeinout { 50% { opacity: 1; } }
+        </style>
+    </head>
+    <body>
+
+        <div id="definition"></div>
+
+        <div class="content">
+            <p>
+                Yo es un ancian esperantist e yo posset fluentmen parlar e scrir esperanto in mi yunitá. Ma con augmentat conossentie de lingues yo ne posset evitar, que yo trovat su ínnaturalitás repugnant, e pos que yo fat conossentie con altri projectes de lingue international, existent tande, yo ajornat mi interesse por li problema al future. Poy venit ido. Yo videt, que quelc ver ameliorationes esset introductet; e yo pensat, que it deve esser apt, proque it havet un tot range de scientistes detra se. Li postulation pri logica sona tre bon, ante quam on ha videt, a quel consequenties it ducte, si on cultiva logica a conto de psicologie e san omnidial ration. It es un psicologic errore expresser li nuancies del signification de un parol per medie de auxiliari síllabes, queles in se self have null signification e es plu o minu inventet, quam es fat in ido. Yo es un experientiat pedagog e posse asserter con certitá, que un ordinari monoglott, sam quam un ordinari poliglott, va trovar li parol-formationes de ido considerabilmen plu desfacil quam tis de Occidental. Malgré que yo hat leet ido durant mult annus, yo leet li unesim texte in occidental, quel venit in mi manus, con considerabilmen plu grand facilitá quam yo leet li textes in ido novial. E tande yo ne hat videt un grammatica, ni un singul regul de occidental!
+            </p>
+        </div>
+
+
+        <script>
+            var dictionary = {};
+            fetch('paroles.json')
+                .then(response => response.json())
+                .then(data => dictionary = data);
+
+            const definitionEl = document.getElementById('definition');
+
+            // var lookupElements = document.getElementsByClassName('lookup');
+
+            
+
+            // for (var parent of lookupElements) {
+            //     for (var child of parent.children) {
+            //         console.log(child);
+            //         child.onselect = logSelection;
+            //     }
+            // }
+
+
+            function debounce(func, delay) {
+                let inDebounce
+                return function() {
+                    const context = this
+                    const args = arguments
+                    clearTimeout(inDebounce)
+                    inDebounce = setTimeout(() => func.apply(context, args), delay)
+                }
+            }
+
+            
+
+            function lookup() {
+                console.log('New selection made');
+                selection = document.getSelection().toString().trim().toLowerCase();
+                console.log(`You selected: ${selection}`);
+                if (selection in dictionary) {
+                    displayInfo(selection)
+                } else {
+                    console.log('Dictionary doesn\'t have that word!');
+                }
+            }
+
+            function displayInfo(word) {
+                definitionEl.classList.remove('fadeInAndOut');
+                definitionEl.innerHTML = '';
+                void definitionEl.offsetWidth;
+                definitionEl.style.zIndex = 1;
+                
+                console.log('looking it up!');
+                var info = dictionary[selection];
+
+                definitionEl.innerHTML = `<div>
+                    <h3>${selection}<h3>
+                    <p>English: <b>${info['English']}</b></p>
+                    <p>Part of Speech: <b>${info['Part of Speech']}</b></p>
+                    <p>Origin: <b>${info['Origin']}</b></p>
+                </div>`;
+
+                definitionEl.classList.add('fadeInAndOut');
+                setTimeout(() => definitionEl.style.zIndex = -1, 5000);
+            }
+
+            document.onselectionchange = debounce(lookup, 1000);
+
+            
+        </script>
+
+        
+    </body>
+</html>
