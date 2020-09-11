@@ -3,137 +3,50 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <style>
+            #langPicker {
+                position: fixed;
+                top: 5px;
+                right: 5px;
+            }
             #definition {
+                display: none;
                 font-size: 14px;
-                height: 200px;
-                z-index: -1;
+                max-width: 70%;
+                max-height: 30%;
+                padding: 20px;
                 color: white;
                 background-color: black;
-                left: 0;
-                right: 0;
-                bottom: 0;
                 position: fixed;
-                text-align: center;
-                opacity: 0;
-                font-size: ;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
             }
             .content {
                 width: 80%;
                 margin: auto;
             }
-            .fadeInAndOut {
-                -webkit-animation: fadeinout 7s ease-out forwards;
-                animation: fadeinout 7s ease-out forwards;
-            }
-            @-webkit-keyframes fadeinout { 50% { opacity: 1; } }
-            @keyframes fadeinout { 50% { opacity: 1; } }
         </style>
     </head>
     <body>
+
+        <div id='langPicker'></div>
 
         <div id="definition"></div>
 
         <div class="content">
             <p>
-                Yo es un ancian esperantist e yo posset fluentmen parlar e scrir esperanto in mi yunitá. Ma con augmentat conossentie de lingues yo ne posset evitar, que yo trovat su ínnaturalitás repugnant, e pos que yo fat conossentie con altri projectes de lingue international, existent tande, yo ajornat mi interesse por li problema al future. Poy venit ido. Yo videt, que quelc ver ameliorationes esset introductet; e yo pensat, que it deve esser apt, proque it havet un tot range de scientistes detra se. Li postulation pri logica sona tre bon, ante quam on ha videt, a quel consequenties it ducte, si on cultiva logica a conto de psicologie e san omnidial ration. It es un psicologic errore expresser li nuancies del signification de un parol per medie de auxiliari síllabes, queles in se self have null signification e es plu o minu inventet, quam es fat in ido. Yo es un experientiat pedagog e posse asserter con certitá, que un ordinari monoglott, sam quam un ordinari poliglott, va trovar li parol-formationes de ido considerabilmen plu desfacil quam tis de Occidental. Malgré que yo hat leet ido durant mult annus, yo leet li unesim texte in occidental, quel venit in mi manus, con considerabilmen plu grand facilitá quam yo leet li textes in ido novial. E tande yo ne hat videt un grammatica, ni un singul regul de occidental!
+                Yo es un ancian esperantist e yo posset fluentmen parlar e scrir esperanto in mi yunitá. Ma con augmentat conossentie de lingues yo ne posset evitar, que yo trovat su ínnaturalitás repugnant, e pos que yo fat conossentie con altri projectes de lingue international, existent tande, yo ajornat mi interesse por li problema al future. 
             </p>
+            <p>Poy venit ido. Yo videt, que quelc ver ameliorationes esset introductet; e yo pensat, que it deve esser apt, proque it havet un tot range de scientistes detra se. Li postulation pri logica sona tre bon, ante quam on ha videt, a quel consequenties it ducte, si on cultiva logica a conto de psicologie e san omnidial ration. </p>
+            <p>It es un psicologic errore expresser li nuancies del signification de un parol per medie de auxiliari síllabes, queles in se self have null signification e es plu o minu inventet, quam es fat in ido. Yo es un experientiat pedagog e posse asserter con certitá, que un ordinari monoglott, sam quam un ordinari poliglott, va trovar li parol-formationes de ido considerabilmen plu desfacil quam tis de Occidental.</p>
+            <p>Malgré que yo hat leet ido durant mult annus, yo leet li unesim texte in occidental, quel venit in mi manus, con considerabilmen plu grand facilitá quam yo leet li textes in ido novial. E tande yo ne hat videt un grammatica, ni un singul regul de occidental!</p>
         </div>
 
-
+        <script src="lookup.js"></script>
         <script>
-            var dictionary = {};
-            fetch('paroles.json')
-                .then(response => response.json())
-                .then(data => dictionary = data);
 
-            const definitionEl = document.getElementById('definition');
+            document.onselectionchange = debounce(lookup, 500);
 
-
-            function debounce(func, delay) {
-                let inDebounce
-                return function() {
-                    const context = this
-                    const args = arguments
-                    clearTimeout(inDebounce)
-                    inDebounce = setTimeout(() => func.apply(context, args), delay)
-                }
-            }
-
-            
-
-            function lookup() {
-                
-                var s = document.getSelection().toString().trim().toLowerCase();
-                var punctuationless = s.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
-                var cleaned = punctuationless.replace(/\s{2,}/g," ");
-                var selection = cleaned.split(' ');
-
-                console.log(`You selected: ${selection}`);
-
-                var definitions = [];
-
-                for (var word of selection) {
-                    if (word in dictionary) {
-                        console.log(`Looking up: ${word}`);
-                        definitions.push({"word": word, "info": dictionary[word]});
-                    } else {
-                        console.log(`Not in dictionary: ${word}`);
-                        definitions.push({"word": word, "info": '' });
-                    }
-                }
-
-                if (definitions.length <= 1) {
-                    var payload = `<div><h3>${definitions[0].word}<h3>`;
-                    for (var prop in definitions[0].info) {
-                        if (definitions[0].info[prop] == undefined) {
-
-                        } else if (definitions[0].info[prop] == false) {
-
-                        } else {
-                            payload += `<p>${prop}: <b>${definitions[0].info[prop]}</b></p>`
-                        }
-                    }
-                    payload += '</div>';
-                        
-                    displayInfo(payload)
-                } else {
-                    var payload = '';
-                    for (var d of definitions) {
-                        if (d.info['English'] != '') {
-                            payload += ` ${d.info['English']} `
-                        } else {
-                            payload += ` ??? `
-                        }
-                        
-                    }
-                    displayInfo(payload)
-                }
-
-                
-                
-            }
-
-            function displayInfo(htmlString) {
-                definitionEl.classList.remove('fadeInAndOut');
-                definitionEl.innerHTML = '';
-                void definitionEl.offsetWidth;
-                definitionEl.style.zIndex = 1;
-                
-                console.log('displaying it!');
-
-                definitionEl.innerHTML = htmlString;
-
-                definitionEl.classList.add('fadeInAndOut');
-                setTimeout(() => definitionEl.style.zIndex = -1, 5000);
-            }
-
-
-
-            document.onselectionchange = debounce(lookup, 1000);
-
-            
         </script>
-
-        
     </body>
 </html>
