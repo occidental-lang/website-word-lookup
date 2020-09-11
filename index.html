@@ -4,6 +4,7 @@
 
         <style>
             #definition {
+                font-size: 14px;
                 height: 200px;
                 z-index: -1;
                 color: white;
@@ -14,6 +15,7 @@
                 position: fixed;
                 text-align: center;
                 opacity: 0;
+                font-size: ;
             }
             .content {
                 width: 80%;
@@ -46,17 +48,6 @@
 
             const definitionEl = document.getElementById('definition');
 
-            // var lookupElements = document.getElementsByClassName('lookup');
-
-            
-
-            // for (var parent of lookupElements) {
-            //     for (var child of parent.children) {
-            //         console.log(child);
-            //         child.onselect = logSelection;
-            //     }
-            // }
-
 
             function debounce(func, delay) {
                 let inDebounce
@@ -71,35 +62,72 @@
             
 
             function lookup() {
-                console.log('New selection made');
-                selection = document.getSelection().toString().trim().toLowerCase();
+                
+                var s = document.getSelection().toString().trim().toLowerCase();
+                var punctuationless = s.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                var cleaned = punctuationless.replace(/\s{2,}/g," ");
+                var selection = cleaned.split(' ');
+
                 console.log(`You selected: ${selection}`);
-                if (selection in dictionary) {
-                    displayInfo(selection)
-                } else {
-                    console.log('Dictionary doesn\'t have that word!');
+
+                var definitions = [];
+
+                for (var word of selection) {
+                    if (word in dictionary) {
+                        console.log(`Looking up: ${word}`);
+                        definitions.push({"word": word, "info": dictionary[word]});
+                    } else {
+                        console.log(`Not in dictionary: ${word}`);
+                        definitions.push({"word": word, "info": '' });
+                    }
                 }
+
+                if (definitions.length <= 1) {
+                    var payload = `<div><h3>${definitions[0].word}<h3>`;
+                    for (var prop in definitions[0].info) {
+                        if (definitions[0].info[prop] == undefined) {
+
+                        } else if (definitions[0].info[prop] == false) {
+
+                        } else {
+                            payload += `<p>${prop}: <b>${definitions[0].info[prop]}</b></p>`
+                        }
+                    }
+                    payload += '</div>';
+                        
+                    displayInfo(payload)
+                } else {
+                    var payload = '';
+                    for (var d of definitions) {
+                        if (d.info['English'] != '') {
+                            payload += ` ${d.info['English']} `
+                        } else {
+                            payload += ` ??? `
+                        }
+                        
+                    }
+                    displayInfo(payload)
+                }
+
+                
+                
             }
 
-            function displayInfo(word) {
+            function displayInfo(htmlString) {
                 definitionEl.classList.remove('fadeInAndOut');
                 definitionEl.innerHTML = '';
                 void definitionEl.offsetWidth;
                 definitionEl.style.zIndex = 1;
                 
-                console.log('looking it up!');
-                var info = dictionary[selection];
+                console.log('displaying it!');
 
-                definitionEl.innerHTML = `<div>
-                    <h3>${selection}<h3>
-                    <p>English: <b>${info['English']}</b></p>
-                    <p>Part of Speech: <b>${info['Part of Speech']}</b></p>
-                    <p>Origin: <b>${info['Origin']}</b></p>
-                </div>`;
+                definitionEl.innerHTML = htmlString;
 
                 definitionEl.classList.add('fadeInAndOut');
                 setTimeout(() => definitionEl.style.zIndex = -1, 5000);
             }
+
+
 
             document.onselectionchange = debounce(lookup, 1000);
 
