@@ -72,29 +72,30 @@ function lookup() {
     }
 
     if (definitions.length <= 1) {
-        var payload = `<h4>${definitions[0].word}</h4>`;
-        for (var prop in definitions[0].info) {
-            if (definitions[0].info[prop] == undefined) {
-
-            } else if (definitions[0].info[prop] == false) {
-
-            } else {
-                payload += `<p>${prop}: <b>${definitions[0].info[prop]}</b></p>`
-            }
-        }
+        var payload = `<h4>${definitions[0].word}</h4>
+        <p>${userISO} : ${definitions[0].info[userISO]}</p>
+        <p><small>altri : ${definitions[0].info[userISO + "2"]}</small></p>
+        <hr/>
+        <p>parte de parlada : ${definitions[0].info['parte de parlada']}</p>
+        <p>radica : ${definitions[0].info['radica']}</p>
+        <p>etymologie : ${definitions[0].info['etymologie']}</p>`;
             
         displayInfo(payload)
     } else {
         var payload = '<p>';
         for (var d of definitions) {
             if (d.info != '') {
-                payload += ` ${d.info[userISO]} `
+                if (d.info[userISO] != '') {
+                    payload += ` ${d.info[userISO]} `
+                } else {
+                    payload += ` [${d.word}] `
+                }
             } else {
-                payload += ` ??? `
+                payload += ` [${d.word}] `
             }
             
         }
-        payload = '</p>';
+        payload += '</p>';
         displayInfo(payload)
     }
 
