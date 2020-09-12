@@ -5,10 +5,11 @@ var userISO = userLang.slice(0,2);
 
 const userLangPicker = `<select name="lingues" id="lingues" onchange="changeLang(this.value)">
         <option value="en">🇬🇧 Anglesi</option>
+        <option value="de">🇩🇪 German</option>
+        <option value="cn">中文 Chinesi</option>
         <option value="es">🇪🇸 Hispan</option>
-        <option value="it">🇮🇹 Italian</option>
         <option value="ru">🇷🇺 Russ</option>
-        <option value="ko">🇰🇷 Korean</option>
+        <option value="eo">Esperanto</option>
     </select>`;
 
 document.getElementById('langPicker').innerHTML = userLangPicker;
@@ -71,7 +72,7 @@ function lookup() {
     }
 
     if (definitions.length <= 1) {
-        var payload = `<div><h3>${definitions[0].word}<h3>`;
+        var payload = `<h4>${definitions[0].word}</h4>`;
         for (var prop in definitions[0].info) {
             if (definitions[0].info[prop] == undefined) {
 
@@ -81,11 +82,10 @@ function lookup() {
                 payload += `<p>${prop}: <b>${definitions[0].info[prop]}</b></p>`
             }
         }
-        payload += '</div>';
             
         displayInfo(payload)
     } else {
-        var payload = '';
+        var payload = '<p>';
         for (var d of definitions) {
             if (d.info != '') {
                 payload += ` ${d.info[userISO]} `
@@ -94,6 +94,7 @@ function lookup() {
             }
             
         }
+        payload = '</p>';
         displayInfo(payload)
     }
 
