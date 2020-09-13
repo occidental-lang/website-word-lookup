@@ -78,7 +78,8 @@ function lookup() {
         <hr/>
         <p>parte de parlada : ${definitions[0].info['parte de parlada']}</p>
         <p>radica : ${definitions[0].info['radica']}</p>
-        <p>etymologie : ${definitions[0].info['etymologie']}</p>`;
+        <p>categorie : ${definitions[0].info['categorie']}</p>
+        <p>etimologie : ${definitions[0].info['etimologie']}</p>`;
             
         displayInfo(payload)
     } else {
