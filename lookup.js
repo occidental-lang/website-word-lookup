@@ -26,7 +26,7 @@ changeLang(userISO);
 
 
 var dictionary = {};
-fetch('dict.json')
+fetch(dictionaryURL)
     .then(response => response.json())
     .then(data => dictionary = data);
 
