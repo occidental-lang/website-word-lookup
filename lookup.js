@@ -1,18 +1,10 @@
 
 
-var userLang = navigator.language || navigator.userLanguage;
-var userISO = userLang.slice(0,2);
+var userLang;
+var userISO;
+var dictionary = {};
 
-const userLangPicker = `<select name="lingues" id="lingues" onchange="changeLang(this.value)">
-        <option value="en">🇬🇧 Anglesi</option>
-        <option value="de">🇩🇪 German</option>
-        <option value="cn">中文 Chinesi</option>
-        <option value="es">🇪🇸 Hispan</option>
-        <option value="ru">🇷🇺 Russ</option>
-        <option value="eo">Esperanto</option>
-    </select>`;
 
-document.getElementById('langPicker').innerHTML = userLangPicker;
 
 
 function changeLang(langISO) {
@@ -21,16 +13,34 @@ function changeLang(langISO) {
     userISO = langISO;
 }
 
-changeLang(userISO);
+
+
+function lookupInit(dictionaryURL) {
+        userLang = navigator.language || navigator.userLanguage;
+        userISO = userLang.slice(0,2);
+        
+        const userLangPicker = `<select name="lingues" id="lingues" onchange="changeLang(this.value)">
+                <option value="en">🇬🇧 Anglesi</option>
+                <option value="de">🇩🇪 German</option>
+                <option value="cn">中文 Chinesi</option>
+                <option value="es">🇪🇸 Hispan</option>
+                <option value="ru">🇷🇺 Russ</option>
+                <option value="eo">Esperanto</option>
+            </select>`;
+
+        document.getElementById('langPicker').innerHTML = userLangPicker;
+        
+        changeLang(userISO);
+        
+        fetch(dictionaryURL)
+            .then(response => response.json())
+            .then(data => dictionary = data);
+
+        const definitionEl = document.getElementById('definition'); 
+}
 
 
 
-var dictionary = {};
-fetch(dictionaryURL)
-    .then(response => response.json())
-    .then(data => dictionary = data);
-
-const definitionEl = document.getElementById('definition');
 
 
 function debounce(func, delay) {
