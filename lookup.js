@@ -28,17 +28,15 @@ function lookupInit(dictionaryURL) {
         userISO = userLang.slice(0,2);
 
         document.getElementById('langPicker').innerHTML = userLangPicker;
-        
+
         changeLang(userISO);
-        
+
         fetch(dictionaryURL)
             .then(response => response.json())
             .then(data => dictionary = data);
+
+        document.onselectionchange = debounce(lookup, 500);
 }
-
-
-
-
 
 function debounce(func, delay) {
     let inDebounce
@@ -49,8 +47,6 @@ function debounce(func, delay) {
         inDebounce = setTimeout(() => func.apply(context, args), delay)
     }
 }
-
-
 
 function lookup() {
     
