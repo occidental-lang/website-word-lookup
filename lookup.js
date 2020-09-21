@@ -5,12 +5,13 @@ var userISO;
 var dictionary = {};
 const definitionEl = document.getElementById('definition'); 
 const userLangPicker = `<select name="lingues" id="lingues" onchange="changeLang(this.value)">
-                <option value="en">🇬🇧 Anglesi</option>
-                <option value="de">🇩🇪 German</option>
-                <option value="cn">中文 Chinesi</option>
-                <option value="es">🇪🇸 Hispan</option>
-                <option value="ru">🇷🇺 Russ</option>
-                <option value="eo">Esperanto</option>
+                <option value="en">🇬🇧 en</option>
+                <option value="de">🇩🇪 de</option>
+                <option value="cn">中文 cn</option>
+                <option value="es">🇪🇸 es</option>
+                <option value="ru">🇷🇺 ru</option>
+                <option value="eo">eo</option>
+                <option value="kr">🇰🇷 kr</option>
             </select>`;
 
 
@@ -25,8 +26,6 @@ function changeLang(langISO) {
 function lookupInit(dictionaryURL) {
         userLang = navigator.language || navigator.userLanguage;
         userISO = userLang.slice(0,2);
-        
-        
 
         document.getElementById('langPicker').innerHTML = userLangPicker;
         
@@ -35,8 +34,6 @@ function lookupInit(dictionaryURL) {
         fetch(dictionaryURL)
             .then(response => response.json())
             .then(data => dictionary = data);
-
-        
 }
 
 
@@ -58,7 +55,7 @@ function debounce(func, delay) {
 function lookup() {
     
     var s = document.getSelection().toString().trim().toLowerCase();
-    var punctuationless = s.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+    var punctuationless = s.replace(/[.,\/#!$%\^&\*;:{}=_`~()"]/g,"");
     var cleaned = punctuationless.replace(/\s{2,}/g," ");
     var selection = cleaned.split(' ');
 
