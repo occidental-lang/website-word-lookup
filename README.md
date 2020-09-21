@@ -40,5 +40,4 @@ The `index.html` file in this repo serves as an example.
 ```
 var dictionaryURL = 'example.com';
 lookupInit(dictionaryURL);
-document.onselectionchange = debounce(lookup, 500);
 ```
