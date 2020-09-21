@@ -38,5 +38,7 @@ The `index.html` file in this repo serves as an example.
 3. After you have finished loading the page content, use the following javascript to initialize the lookup functionality:
 
 ```
+var dictionaryURL = 'example.com';
+lookupInit(dictionaryURL);
 document.onselectionchange = debounce(lookup, 500);
 ```
