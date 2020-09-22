@@ -35,7 +35,7 @@ function lookupInit(dictionaryURL) {
             .then(response => response.json())
             .then(data => dictionary = data);
 
-        document.onselectionchange = debounce(lookup, 1500);
+        document.onselectionchange = debounce(lookup, 1200);
 }
 
 function debounce(func, delay) {
